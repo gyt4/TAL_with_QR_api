@@ -297,8 +297,9 @@ namespace patches::Qr
             if (qrEvent)
             {
 				
-                std::cout << "[Init] Cam Plugin found ";
-                int cam_stat = ((initCam *)qrEvent)(void);
+                std::cout << "[Init] Cam Plugin found "<<std::endl;
+                int cam_stat = ((initCam *)qrEvent)();
+				std::cout << "[Init] Cam Plugin init func exited "<<std::endl;
                 if (cam_stat != 0)
                 {
                     std::cout << "[Init] Cam Plugin found but init failed";
