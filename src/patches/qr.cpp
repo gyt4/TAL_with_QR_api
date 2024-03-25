@@ -217,16 +217,9 @@ namespace patches::Qr
             }
             else
             {
-                for (auto plugin : plugins)
-                {
-                    FARPROC qrDataFunc = GetProcAddress(plugin, "GetQrData");
-                    if (qrDataFunc)
-                    {
-                        memcpy(dest, cam_qr_data, cam_qr_len);
-                        gState = State::Ready;
-                        return cam_qr_len;
-                    }
-                }
+                memcpy(dest, cam_qr_data, cam_qr_len);
+                gState = State::Ready;
+                return cam_qr_len;
             }
         }
         return 0;
