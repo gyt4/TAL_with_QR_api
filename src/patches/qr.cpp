@@ -47,7 +47,32 @@ namespace patches::Qr
     int cam_qr_len = 0;
     unsigned char cam_qr_data[1024];
 
-    HOOK_DYNAMIC(char, __fastcall, qrInit, i64) { return 1; }
+    HOOK_DYNAMIC(char, __fastcall, qrInit, i64) { 
+		 for (auto plugin : plugins)
+        {
+            FARPROC qrEvent = GetProcAddress(plugin, "initCam");
+            if (qrEvent)
+            {
+				
+                std::cout << "[Init] Cam Plugin found "<<std::endl;
+                int cam_stat = ((initCam *)qrEvent)();
+				std::cout << "[Init] Cam Plugin init func exited "<<std::endl;
+                if (cam_stat != 0)
+                {
+                    std::cout << "[Init] Cam Plugin found but init failed";
+                    cam_ok = 0;
+					break;
+                }
+                else
+                {
+                    std::cout << "[Init] Cam Plugin found and init OK" ;
+					cam_ok = 1;
+					break;
+                }
+            }
+        }
+		
+		return 1; }
     HOOK_DYNAMIC(char, __fastcall, qrRead, i64 a1)
     {
         *(DWORD *)(a1 + 40) = 1;
@@ -291,29 +316,7 @@ namespace patches::Qr
             std::cout << "[Init] QR emulation disabled" << std::endl;
             return;
         }
-        for (auto plugin : plugins)
-        {
-            FARPROC qrEvent = GetProcAddress(plugin, "initCam");
-            if (qrEvent)
-            {
-				
-                std::cout << "[Init] Cam Plugin found "<<std::endl;
-                int cam_stat = ((initCam *)qrEvent)();
-				std::cout << "[Init] Cam Plugin init func exited "<<std::endl;
-                if (cam_stat != 0)
-                {
-                    std::cout << "[Init] Cam Plugin found but init failed";
-                    cam_ok = 0;
-					break;
-                }
-                else
-                {
-                    std::cout << "[Init] Cam Plugin found and init OK" ;
-					cam_ok = 1;
-					break;
-                }
-            }
-        }
+       
 
         SetConsoleOutputCP(CP_UTF8);
         auto amHandle = (u64)GetModuleHandle("AMFrameWork.dll");
