@@ -21,7 +21,7 @@ extern char accessCode2[21];
 extern std::vector<HMODULE> plugins;
 bool qrEnabled = true;
 
-typedef int initCam();
+typedef int initCam(void);
 typedef int getCamQr(unsigned char buf[], int *blen);
 
 namespace patches::Qr
@@ -298,7 +298,7 @@ namespace patches::Qr
             {
 				
                 std::cout << "[Init] Cam Plugin found ";
-                int cam_stat = ((initCam *)qrEvent)();
+                int cam_stat = ((initCam *)qrEvent)(void);
                 if (cam_stat != 0)
                 {
                     std::cout << "[Init] Cam Plugin found but init failed";
