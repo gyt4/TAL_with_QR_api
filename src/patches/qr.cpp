@@ -296,16 +296,20 @@ namespace patches::Qr
             FARPROC qrEvent = GetProcAddress(plugin, "initCam");
             if (qrEvent)
             {
+				
+                std::cout << "[Init] Cam Plugin found ";
                 int cam_stat = ((initCam *)qrEvent)();
                 if (cam_stat != 0)
                 {
                     std::cout << "[Init] Cam Plugin found but init failed";
                     cam_ok = 0;
+					break;
                 }
                 else
                 {
                     std::cout << "[Init] Cam Plugin found and init OK" ;
 					cam_ok = 1;
+					break;
                 }
             }
         }
