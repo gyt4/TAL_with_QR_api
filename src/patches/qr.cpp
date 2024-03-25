@@ -101,7 +101,6 @@ namespace patches::Qr
     {
         if (gState == State::CopyWait)
         {
-            std::cout << "Copy data, length: " << length << std::endl;
 
             auto configPath = std::filesystem::current_path() / "config.toml";
             std::unique_ptr<toml_table_t, void (*)(toml_table_t *)> config_ptr(openConfig(configPath), toml_free);
@@ -215,7 +214,7 @@ namespace patches::Qr
                 gState = State::Ready;
                 return dataSize;
             }
-            else
+            else if  (gMode == Mode::Reader)
             {
                 memcpy(dest, cam_qr_data, cam_qr_len);
                 gState = State::Ready;
