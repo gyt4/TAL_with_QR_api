@@ -255,7 +255,7 @@ namespace patches::Qr
                     FARPROC qrEvent = GetProcAddress(plugin, "getCamQr");
                     if (qrEvent)
                     {
-                        int cam_stat = ((getCamQr *)qrEvent)(cam_qr_data, cam_qr_len);
+                        int cam_stat = ((getCamQr *)qrEvent)(cam_qr_data, &cam_qr_len);
                         if (cam_stat == 0)
                         {
                             gState = State::CopyWait;
@@ -304,7 +304,8 @@ namespace patches::Qr
                 }
                 else
                 {
-                    std::cout << "[Init] Cam Plugin found and init OK" cam_ok = 1;
+                    std::cout << "[Init] Cam Plugin found and init OK" ;
+					cam_ok = 1;
                 }
             }
         }
