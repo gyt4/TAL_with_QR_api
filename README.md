@@ -2,7 +2,9 @@
 
 qr plugin is able to use.
 
-This is a loader for Taiko no Tatsujin Nijiiro ver.
+qr plugin: https://github.com/gyt4/taiko_qr_cam_plugin/
+
+This is a loader for Taiko no Tatsujin Nijiiro ver,with modified to use qr plugin.
 
 ## Setup
 
