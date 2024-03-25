@@ -1,5 +1,7 @@
 # TaikoArcadeLoader
 
+qr plugin is able to use.
+
 This is a loader for Taiko no Tatsujin Nijiiro ver.
 
 ## Setup
