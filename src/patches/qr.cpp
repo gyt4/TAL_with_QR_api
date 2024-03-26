@@ -213,12 +213,22 @@ namespace patches::Qr
                 memcpy(dest, byteData.data(), dataSize);
                 gState = State::Ready;
                 return dataSize;
-            }
-            else if  (gMode == Mode::Reader)
+            }else if(cam_ok)
             {
-                memcpy(dest, cam_qr_data, cam_qr_len);
-                gState = State::Ready;
-                return cam_qr_len;
+                for (auto plugin : plugins)
+                {
+                    FARPROC qrEvent = GetProcAddress(plugin, "getCamQr");
+                    if (qrEvent)
+                    {
+                        int cam_stat = ((getCamQr *)qrEvent)(cam_qr_data, &cam_qr_len);
+                        if (cam_stat == 0)
+                        {
+                            memcpy(dest, cam_qr_data, cam_qr_len);
+              				gState = State::Ready;
+                			return cam_qr_len;
+                        }
+                    }
+                }
             }
         }
         return 0;
@@ -265,22 +275,7 @@ namespace patches::Qr
                 gState = State::CopyWait;
                 gMode = Mode::Image;
             }
-            else if(cam_ok)
-            {
-                for (auto plugin : plugins)
-                {
-                    FARPROC qrEvent = GetProcAddress(plugin, "getCamQr");
-                    if (qrEvent)
-                    {
-                        int cam_stat = ((getCamQr *)qrEvent)(cam_qr_data, &cam_qr_len);
-                        if (cam_stat == 0)
-                        {
-                            gState = State::CopyWait;
-                            gMode = Mode::Reader;
-                        }
-                    }
-                }
-            }
+          
         }
     }
 
