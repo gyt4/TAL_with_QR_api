@@ -21,7 +21,7 @@ extern char accessCode2[21];
 extern std::vector<HMODULE> plugins;
 bool qrEnabled = true;
 
-typedef int initCam(void);
+typedef int noargfunc(void);
 typedef int getCamQr(unsigned char buf[], int *blen);
 
 namespace patches::Qr
@@ -55,17 +55,17 @@ namespace patches::Qr
             {
 				
                 std::cout << "[Init] Cam Plugin found "<<std::endl;
-                int cam_stat = ((initCam *)qrEvent)();
+                int cam_stat = ((noargfunc *)qrEvent)();
 				std::cout << "[Init] Cam Plugin init func exited "<<std::endl;
                 if (cam_stat != 0)
                 {
-                    std::cout << "[Init] Cam Plugin found but init failed";
+                    std::cout << "[Init] Cam Plugin found but init failed"std::endl;
                     cam_ok = 0;
 					break;
                 }
                 else
                 {
-                    std::cout << "[Init] Cam Plugin found and init OK" ;
+                    std::cout << "[Init] Cam Plugin found and init OK"<<std::endl ;
 					cam_ok = 1;
 					break;
                 }
@@ -75,12 +75,33 @@ namespace patches::Qr
 		return 1; }
     HOOK_DYNAMIC(char, __fastcall, qrRead, i64 a1)
     {
+		std::cout<<"qrRead called!"<<std::endl;
+		 for (auto plugin : plugins)
+        {
+            FARPROC qrEvent = GetProcAddress(plugin, "beginRead");
+            if (qrEvent)
+            {
+				((noargfunc *)qrEvent)();
+				break;
+            }
+        }
         *(DWORD *)(a1 + 40) = 1;
         *(DWORD *)(a1 + 16) = 1;
         *(BYTE *)(a1 + 112) = 0;
         return 1;
     }
-    HOOK_DYNAMIC(char, __fastcall, qrClose, i64) { return 1; }
+    HOOK_DYNAMIC(char, __fastcall, qrClose, i64) { 
+		std::cout<<"qrClose called!"<<std::endl;
+		 for (auto plugin : plugins)
+        {
+            FARPROC qrEvent = GetProcAddress(plugin, "closeRead");
+            if (qrEvent)
+            {
+				((noargfunc *)qrEvent)();
+				break;
+            }
+        }
+		return 1; }
     HOOK_DYNAMIC(i64, __fastcall, callQrUnknown, i64) { return 1; }
     HOOK_DYNAMIC(bool, __fastcall, Send1, i64, const void *, i64) { return true; }
     HOOK_DYNAMIC(bool, __fastcall, Send2, i64, char) { return true; }
