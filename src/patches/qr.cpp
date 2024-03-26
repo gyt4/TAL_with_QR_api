@@ -75,16 +75,7 @@ namespace patches::Qr
 		return 1; }
     HOOK_DYNAMIC(char, __fastcall, qrRead, i64 a1)
     {
-		std::cout<<"qrRead called!"<<std::endl;
-		 for (auto plugin : plugins)
-        {
-            FARPROC qrEvent = GetProcAddress(plugin, "beginRead");
-            if (qrEvent)
-            {
-				((noargfunc *)qrEvent)();
-				break;
-            }
-        }
+		// std::cout<<"qrRead called!"<<std::endl;
         *(DWORD *)(a1 + 40) = 1;
         *(DWORD *)(a1 + 16) = 1;
         *(BYTE *)(a1 + 112) = 0;
