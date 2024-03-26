@@ -213,8 +213,9 @@ namespace patches::Qr
                 memcpy(dest, byteData.data(), dataSize);
                 gState = State::Ready;
                 return dataSize;
-            }else if(cam_ok)
-            {
+            }
+            
+        }else if(cam_ok){
                 for (auto plugin : plugins)
                 {
                     FARPROC qrEvent = GetProcAddress(plugin, "getCamQr");
@@ -230,7 +231,7 @@ namespace patches::Qr
                     }
                 }
             }
-        }
+		
         return 0;
     }
 
