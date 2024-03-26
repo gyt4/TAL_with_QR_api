@@ -82,16 +82,8 @@ namespace patches::Qr
         return 1;
     }
     HOOK_DYNAMIC(char, __fastcall, qrClose, i64) { 
-		std::cout<<"qrClose called!"<<std::endl;
-		 for (auto plugin : plugins)
-        {
-            FARPROC qrEvent = GetProcAddress(plugin, "closeRead");
-            if (qrEvent)
-            {
-				((noargfunc *)qrEvent)();
-				break;
-            }
-        }
+		// std::cout<<"qrClose called!"<<std::endl;
+	
 		return 1; }
     HOOK_DYNAMIC(i64, __fastcall, callQrUnknown, i64) { return 1; }
     HOOK_DYNAMIC(bool, __fastcall, Send1, i64, const void *, i64) { return true; }
@@ -252,6 +244,16 @@ namespace patches::Qr
     {
         if (!qrEnabled)
             return;
+
+			 for (auto plugin : plugins)
+        {
+            FARPROC qrEvent = GetProcAddress(plugin, "camUpdate");
+            if (qrEvent)
+            {
+				((noargfunc *)qrEvent)();
+				break;
+            }
+        }
         if (gState == State::Ready)
         {
             if (IsButtonTapped(CARD_INSERT_1))
