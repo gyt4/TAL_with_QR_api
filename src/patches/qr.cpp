@@ -59,7 +59,7 @@ namespace patches::Qr
 				std::cout << "[Init] Cam Plugin init func exited "<<std::endl;
                 if (cam_stat != 0)
                 {
-                    std::cout << "[Init] Cam Plugin found but init failed"std::endl;
+                    std::cout << "[Init] Cam Plugin found but init failed"<<std::endl;
                     cam_ok = 0;
 					break;
                 }
